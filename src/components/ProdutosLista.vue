@@ -1,50 +1,66 @@
  <template>
   <section class="produtos-container">
-    <div v-if="produtos && produtos.length" class="produtos">
-      <div
-        class="produto"
-        v-for="{ id, nome, preco, descricao, fotos } in produtos"
-        :key="id"
-      >
-        <router-link to="/">
-          <img v-if="fotos" :src="fotos[0].src" :alt="fotos[0].titulo" />
-          <p class="preco">{{ preco }}</p>
-          <h2 class="titulo">{{ nome }}</h2>
-          <p>{{ descricao }}</p>
-        </router-link>
+    <transition mode="out-in">
+      <div v-if="produtos && produtos.length" class="produtos" key="produtos">
+        <div
+          class="produto"
+          v-for="({ nome, preco, descricao, fotos }, index) in produtos"
+          :key="index"
+        >
+          <router-link to="/">
+            <img v-if="fotos" :src="fotos[0].src" :alt="fotos[0].titulo" />
+            <p class="preco">{{ preco }}</p>
+            <h2 class="titulo">{{ nome }}</h2>
+            <p>{{ descricao }}</p>
+          </router-link>
+        </div>
+        <ProdutosPaginar
+          :produtosTotal="produtosTotal"
+          :produtosPorPagina="produtosPorPagina"
+        />
       </div>
-    </div>
-    <div v-else-if="produtos && produtos.length === 0">
-      <p class="sem-resultados">
-        Busca sem resultados. Tente buscar outro termo.
-      </p>
-    </div>
+      <div v-else-if="produtos && produtos.length === 0" key="sem-resultados">
+        <p class="sem-resultados">
+          Busca sem resultados. Tente buscar outro termo.
+        </p>
+      </div>
+      <PaginaCarregando key="carregando" v-else />
+    </transition>
   </section>
 </template>
 
 <script>
+import ProdutosPaginar from "@/components/ProdutosPaginar.vue";
 import { api } from "@/services.js";
 import { serialize } from "@/helpers.js";
 
 export default {
+  name: "ProdutosLista",
+  components: {
+    ProdutosPaginar,
+  },
   data() {
     return {
       produtos: null,
       produtosPorPagina: 9,
+      produtosTotal: 0,
     };
   },
   computed: {
     url() {
       const query = serialize(this.$route.query);
-
-      return `/produto?_limit=10${this.produtosPorPagina}${query}`;
+      return `/produto?_limit=${this.produtosPorPagina}${query}`;
     },
   },
   methods: {
     getProdutos() {
-      api.get(this.url).then((r) => {
-        this.produtos = r.data;
-      });
+      this.produtos = null;
+      window.setTimeout(() => {
+        api.get(this.url).then((r) => {
+          this.produtosTotal = Number(r.headers["x-total-count"]);
+          this.produtos = r.data;
+        });
+      }, 1500);
     },
   },
   watch: {
