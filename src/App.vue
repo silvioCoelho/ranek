@@ -42,7 +42,7 @@ ul {
 }
 
 body {
-  font-family: "Avenir", Arial, Helvetica, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #345;
   background: url("./assets/pattern.svg") repeat top;
 }
@@ -68,7 +68,7 @@ img {
   box-shadow: 0 4px 8px rgba(30, 60, 90, 0.2);
   transition: all 0.3s;
   border: none;
-  font-family: "Avenir", Arial, Helvetica, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   cursor: pointer;
 }
 
@@ -94,12 +94,12 @@ label {
 input,
 textarea {
   border-radius: 4px;
-  border: 1px solid #fff;
+  border: 1px solid white;
   padding: 15px;
   box-shadow: 0 4px 8px rgba(30, 60, 90, 0.1);
   transition: all 0.3s;
   font-size: 1rem;
-  font-family: "Avenir", Arial, Helvetica, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   margin-bottom: 15px;
 }
 
